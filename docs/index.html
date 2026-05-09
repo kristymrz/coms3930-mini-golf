@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COMS3930 Mini Golf — Documentation</title>
+  <style>
+    :root {
+      --green:  #2d7a3a;
+      --light:  #e8f5e9;
+      --accent: #f9a825;
+      --text:   #1a1a1a;
+      --muted:  #555;
+      --code-bg:#1e1e2e;
+      --code-fg:#cdd6f4;
+      --border: #c8e6c9;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.65;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--green);
+      color: #fff;
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+    }
+    header h1 { font-size: 2.4rem; letter-spacing: -0.5px; }
+    header p  { margin-top: .6rem; opacity: .85; font-size: 1.05rem; }
+    .badge {
+      display: inline-block;
+      margin-top: 1rem;
+      background: var(--accent);
+      color: #000;
+      font-weight: 700;
+      font-size: .8rem;
+      padding: .25rem .75rem;
+      border-radius: 999px;
+      letter-spacing: .5px;
+    }
+
+    /* ── Nav ── */
+    nav {
+      background: #f1f8e9;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      gap: 0;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    nav a {
+      display: block;
+      padding: .85rem 1.4rem;
+      color: var(--green);
+      font-weight: 600;
+      font-size: .9rem;
+      text-decoration: none;
+      border-bottom: 3px solid transparent;
+      transition: border-color .2s, background .2s;
+    }
+    nav a:hover { background: #dcedc8; border-color: var(--green); }
+
+    /* ── Main layout ── */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* ── Section ── */
+    section { margin-bottom: 3.5rem; }
+    section h2 {
+      font-size: 1.55rem;
+      color: var(--green);
+      border-bottom: 2px solid var(--border);
+      padding-bottom: .4rem;
+      margin-bottom: 1.1rem;
+    }
+    section h3 {
+      font-size: 1.1rem;
+      margin: 1.4rem 0 .5rem;
+      color: #333;
+    }
+    p { margin-bottom: .85rem; color: var(--muted); }
+
+    /* ── Cards ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+    .card {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.1rem;
+      background: var(--light);
+    }
+    .card h4 { font-size: 1rem; margin-bottom: .4rem; color: var(--green); }
+    .card p  { font-size: .88rem; margin: 0; }
+
+    /* ── Code blocks ── */
+    pre {
+      background: var(--code-bg);
+      color: var(--code-fg);
+      border-radius: 8px;
+      padding: 1.1rem 1.3rem;
+      overflow-x: auto;
+      font-size: .85rem;
+      margin: .6rem 0 1rem;
+    }
+    code { font-family: "Fira Code", "Cascadia Code", monospace; }
+    p code, li code {
+      background: #f0f0f0;
+      border-radius: 4px;
+      padding: .1em .35em;
+      font-size: .88em;
+      color: #c0392b;
+    }
+
+    /* ── Pin table ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .9rem;
+      margin: .75rem 0 1.2rem;
+    }
+    th {
+      background: var(--green);
+      color: #fff;
+      text-align: left;
+      padding: .55rem .85rem;
+    }
+    td { padding: .5rem .85rem; border-bottom: 1px solid var(--border); }
+    tr:nth-child(even) td { background: var(--light); }
+
+    /* ── Step list ── */
+    ol.steps { padding-left: 1.4rem; }
+    ol.steps li { margin-bottom: .6rem; color: var(--muted); }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: .82rem;
+      color: #999;
+      border-top: 1px solid #eee;
+    }
+    footer a { color: var(--green); }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>⛳ COMS3930 Mini Golf</h1>
+  <p>Creative Embedded Systems — Final Project Documentation</p>
+  <div class="badge">Kristy Martinez &nbsp;·&nbsp; Victoria Cao &nbsp;·&nbsp; Mimansa Kant</div>
+</header>
+
+<nav>
+  <a href="#overview">Overview</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#ball-sensors">Ball Sensors</a>
+  <a href="#congrats-display">Congrats Display</a>
+  <a href="#motor">Door Motor</a>
+  <a href="#sounds">Sounds</a>
+  <a href="#setup">Setup</a>
+</nav>
+
+<main>
+
+  <!-- Overview -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <p>
+      This project is an interactive embedded mini golf system built around multiple ESP32
+      microcontrollers communicating wirelessly via <strong>ESP-NOW</strong>. When a player sinks
+      the ball, sensors detect it and trigger a celebration sequence — a congratulations animation
+      on a TFT display and an audio fanfare played from a connected computer.
+    </p>
+    <p>
+      A stepper-motor-driven door on the lighthouse hole oscillates continuously, acting as a
+      moving obstacle that players must time their shot around.
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>Ball Sensors ESP32</h4>
+        <p>Detects ball entry on left or right sensor and broadcasts a trigger over ESP-NOW.</p>
+      </div>
+      <div class="card">
+        <h4>Congrats Display ESP32</h4>
+        <p>Receives the trigger and plays a scrolling celebration animation on a TFT screen.</p>
+      </div>
+      <div class="card">
+        <h4>Motor ESP32</h4>
+        <p>Continuously oscillates a stepper motor to create a moving door obstacle.</p>
+      </div>
+      <div class="card">
+        <h4>Sound (Python)</h4>
+        <p>Listens on serial for ball detection events and plays a <code>.wav</code> fanfare.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture -->
+  <section id="architecture">
+    <h2>System Architecture</h2>
+    <p>
+      The three ESP32 boards communicate as follows:
+    </p>
+    <pre><code>┌─────────────────────┐        ESP-NOW (WiFi)        ┌──────────────────────┐
+│   Ball Sensor ESP32  │ ─────────────────────────▶  │  Congrats ESP32      │
+│  (detects ball hit)  │                              │  (TFT celebration)   │
+└─────────────────────┘                              └──────────────────────┘
+          │
+          │ Serial (USB)
+          ▼
+┌─────────────────────┐
+│   Mac / PC          │
+│   play_sound.py     │  ──▶  afplay celebration.wav
+└─────────────────────┘
+
+┌─────────────────────┐
+│   Motor ESP32        │  (standalone — no network)
+│  (door oscillation)  │
+└─────────────────────┘</code></pre>
+    <p>
+      The Ball Sensor ESP32 is registered as an ESP-NOW peer with the Congrats ESP32's MAC address
+      hard-coded. When a sensor fires, it sends a single-byte message (<code>0x01</code>) to that
+      peer. No WiFi router is needed — the two boards communicate directly.
+    </p>
+  </section>
+
+  <!-- Ball Sensors -->
+  <section id="ball-sensors">
+    <h2>Ball Sensors ESP32</h2>
+    <p>
+      Located in <code>ball_sensors/src/main.cpp</code>. Uses two digital input pins wired to
+      photoresistors or IR break-beam sensors to detect the ball passing through either the left
+      or right channel of the hole.
+    </p>
+
+    <h3>Pin Assignments</h3>
+    <table>
+      <thead><tr><th>Pin</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td><code>GPIO 15</code></td><td>Left sensor input (INPUT_PULLDOWN)</td></tr>
+        <tr><td><code>GPIO 12</code></td><td>Right sensor input (INPUT_PULLDOWN)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Debounce</h3>
+    <p>
+      A 200 ms debounce window (<code>DEBOUNCE_MS</code>) prevents multiple triggers from a
+      single ball pass. Each sensor tracks its own last-trigger timestamp independently.
+    </p>
+
+    <h3>ESP-NOW Target MAC</h3>
+    <pre><code>static uint8_t cateyeMac[] = {0xA0, 0xDD, 0x6C, 0x74, 0xD3, 0xB4};</code></pre>
+    <p>
+      Update this to match the MAC address of your Congrats Display ESP32 before flashing.
+      You can read the MAC from the Arduino serial monitor with a small sketch that calls
+      <code>WiFi.macAddress()</code>.
+    </p>
+
+    <h3>Key Functions</h3>
+    <table>
+      <thead><tr><th>Function</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>sendCelebration()</code></td><td>Sends byte <code>0x01</code> to the Congrats ESP32 via ESP-NOW.</td></tr>
+        <tr><td><code>setup()</code></td><td>Initialises serial, pins, WiFi (STA mode), ESP-NOW, and registers peer.</td></tr>
+        <tr><td><code>loop()</code></td><td>Polls both sensors every 10 ms, fires trigger on rising edge.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Congrats Display -->
+  <section id="congrats-display">
+    <h2>Congrats Display ESP32</h2>
+    <p>
+      Located in <code>congrats_esp32/src/main.cpp</code>. Uses a <strong>TTGO T-Display</strong>
+      (240 × 135 px TFT) driven by the <code>TFT_eSPI</code> library. Renders two modes:
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>Idle Mode</h4>
+        <p>"MINI-GOLF" scrolls in from the right, holds for 2 s, then scrolls off to the left. Loops continuously.</p>
+      </div>
+      <div class="card">
+        <h4>Celebration Mode</h4>
+        <p>Triggered by ESP-NOW. Slides in "CONGRATULATIONS!!!! / YOU GOT IT IN / THE LIGHTHOUSE!" for 13.7 s, then returns to idle.</p>
+      </div>
+    </div>
+
+    <h3>Display Constants</h3>
+    <table>
+      <thead><tr><th>Constant</th><th>Value</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>SCR_W</code></td><td>240</td><td>Screen width in pixels</td></tr>
+        <tr><td><code>SCR_H</code></td><td>135</td><td>Screen height in pixels</td></tr>
+        <tr><td><code>CELEBRATE_DURATION_MS</code></td><td>13 700</td><td>Total celebration window</td></tr>
+        <tr><td><code>CELEB_HOLD_MS</code></td><td>3 000</td><td>Hold time at centre during celebration</td></tr>
+        <tr><td><code>IDLE_HOLD_MS</code></td><td>2 000</td><td>Hold time at centre during idle</td></tr>
+        <tr><td><code>SCROLL_SPEED</code></td><td>4 px/frame</td><td>Horizontal scroll speed</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Rendering Pipeline</h3>
+    <p>
+      All drawing goes to an off-screen sprite (<code>TFT_eSprite</code>) and is pushed to the
+      display in one call to eliminate flicker. Text is rendered with a 1-pixel black outline via
+      <code>sprOutlined()</code> for readability over coloured backgrounds.
+    </p>
+
+    <h3>ESP-NOW Receive Callback</h3>
+    <pre><code>void onDataReceived(const uint8_t* mac, const uint8_t* data, int len) {
+    if (len > 0 && data[0] == 1 && !celebrating) {
+        celebrateFlag = true;  // set from ISR context, read in loop()
+    }
+}</code></pre>
+    <p>
+      The flag is checked at the start of each <code>loop()</code> iteration to keep ISR logic
+      minimal and avoid re-entrancy issues.
+    </p>
+  </section>
+
+  <!-- Motor -->
+  <section id="motor">
+    <h2>Door Motor ESP32</h2>
+    <p>
+      Located in <code>motor_esp32/src/main.cpp</code>. Drives a 4-wire stepper motor via an
+      H-bridge (e.g. L298N or ULN2003) using half-step sequencing. The motor swings left for
+      1.2 s, then right for 1.2 s, repeating indefinitely to create a moving door obstacle.
+    </p>
+
+    <h3>Pin Assignments</h3>
+    <table>
+      <thead><tr><th>Pin</th><th>Motor Wire</th></tr></thead>
+      <tbody>
+        <tr><td><code>GPIO 32</code></td><td>IN1</td></tr>
+        <tr><td><code>GPIO 27</code></td><td>IN2</td></tr>
+        <tr><td><code>GPIO 26</code></td><td>IN3</td></tr>
+        <tr><td><code>GPIO 13</code></td><td>IN4</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Step Sequence</h3>
+    <pre><code>const int stepSequence[4][4] = {
+    {1, 1, 0, 0},
+    {0, 1, 1, 0},
+    {0, 0, 1, 1},
+    {1, 0, 0, 1}
+};</code></pre>
+    <p>
+      Direction is controlled by incrementing (<code>+1</code>) or decrementing (<code>-1</code>)
+      the step index modulo 4. Step delay is 5 000 µs per step.
+    </p>
+
+    <h3>Tuning</h3>
+    <p>
+      Change <code>SWING_DURATION_MS</code> (default <code>1200</code>) to adjust how far the
+      door swings before reversing. Increase the step delay (<code>delayMicroseconds(5000)</code>)
+      to slow the motor if it stalls.
+    </p>
+  </section>
+
+  <!-- Sounds -->
+  <section id="sounds">
+    <h2>Sound System</h2>
+    <p>
+      Located in <code>sounds/play_sound.py</code>. A Python script that bridges the Ball Sensor
+      ESP32's serial output to the Mac's audio system.
+    </p>
+
+    <h3>How It Works</h3>
+    <ol class="steps">
+      <li>Auto-detects the first <code>/dev/tty.usbserial-*</code> or <code>/dev/tty.SLAB_USBtoUART*</code> device.</li>
+      <li>Opens a 115 200 baud serial connection to the Ball Sensor ESP32.</li>
+      <li>Reads lines; when a line contains <code>[BALL]</code>, spawns <code>afplay celebration.wav</code>.</li>
+    </ol>
+
+    <h3>Dependencies</h3>
+    <pre><code>pip install pyserial</code></pre>
+    <p>
+      <code>afplay</code> is a macOS built-in. On Linux, replace it with <code>aplay</code> or
+      <code>paplay</code> as appropriate.
+    </p>
+
+    <h3>Running</h3>
+    <pre><code>cd sounds
+python3 play_sound.py</code></pre>
+    <p>Keep this script running while the mini golf course is in use. It will print all serial
+    output to the terminal so you can monitor sensor events in real time.</p>
+  </section>
+
+  <!-- Setup -->
+  <section id="setup">
+    <h2>Full Setup Guide</h2>
+
+    <h3>Prerequisites</h3>
+    <ul style="padding-left:1.4rem; color:var(--muted); margin-bottom:.85rem;">
+      <li><a href="https://platformio.org/" style="color:var(--green)">PlatformIO</a> (VS Code extension or CLI)</li>
+      <li>Python 3 + <code>pyserial</code> (<code>pip install pyserial</code>)</li>
+      <li>Three ESP32 development boards</li>
+      <li>Stepper motor + H-bridge driver</li>
+      <li>Two ball/IR sensors</li>
+    </ul>
+
+    <h3>1 — Flash the Ball Sensor ESP32</h3>
+    <ol class="steps">
+      <li>Open <code>ball_sensors/</code> in VS Code with PlatformIO.</li>
+      <li>Update <code>cateyeMac[]</code> in <code>src/main.cpp</code> with the MAC of your Congrats ESP32.</li>
+      <li>Connect sensors to GPIO 15 (left) and GPIO 12 (right).</li>
+      <li>Run <strong>PlatformIO: Upload</strong>.</li>
+    </ol>
+
+    <h3>2 — Flash the Congrats Display ESP32</h3>
+    <ol class="steps">
+      <li>Open <code>congrats_esp32/</code> in VS Code.</li>
+      <li>Confirm <code>platformio.ini</code> targets your TFT board (TTGO T-Display).</li>
+      <li>Run <strong>PlatformIO: Upload</strong>.</li>
+      <li>On first boot the idle "MINI-GOLF" scroll should start immediately.</li>
+    </ol>
+
+    <h3>3 — Flash the Motor ESP32</h3>
+    <ol class="steps">
+      <li>Open <code>motor_esp32/</code> in VS Code.</li>
+      <li>Wire the H-bridge IN1–IN4 to GPIO 32, 27, 26, 13 respectively.</li>
+      <li>Run <strong>PlatformIO: Upload</strong>. The door will begin oscillating on boot.</li>
+    </ol>
+
+    <h3>4 — Start the Sound Script</h3>
+    <ol class="steps">
+      <li>Plug the Ball Sensor ESP32 into your Mac via USB.</li>
+      <li>Run <code>cd sounds &amp;&amp; python3 play_sound.py</code>.</li>
+      <li>Roll a ball through — you should hear the celebration fanfare!</li>
+    </ol>
+  </section>
+
+</main>
+
+<footer>
+  <p>
+    COMS3930 Creative Embedded Systems — Columbia University &nbsp;|&nbsp;
+    <a href="https://github.com/kristymrz/coms3930-mini-golf" target="_blank">GitHub Repository</a>
+  </p>
+</footer>
+
+</body>
+</html>
