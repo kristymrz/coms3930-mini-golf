@@ -154,6 +154,28 @@
       border-top: 1px solid #eee;
     }
     footer a { color: var(--green); }
+
+    /* ── Gallery ── */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .gallery a {
+      display: block;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+    }
+    .gallery img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+      transition: transform .2s;
+    }
+    .gallery a:hover img { transform: scale(1.04); }
   </style>
 </head>
 <body>
@@ -167,6 +189,7 @@
 <nav>
   <a href="#overview">Overview</a>
   <a href="#architecture">Architecture</a>
+  <a href="#gallery">Gallery</a>
   <a href="#ball-sensors">Ball Sensors</a>
   <a href="#congrats-display">Congrats Display</a>
   <a href="#motor">Door Motor</a>
@@ -237,6 +260,26 @@
       hard-coded. When a sensor fires, it sends a single-byte message (<code>0x01</code>) to that
       peer. No WiFi router is needed — the two boards communicate directly.
     </p>
+  </section>
+
+  <!-- Gallery -->
+  <section id="gallery">
+    <h2>Gallery</h2>
+    <p>Photos of the mini golf course and hardware build.</p>
+    <div class="gallery">
+      <a href="../images/IMG_3502.JPG" target="_blank">
+        <img src="../images/IMG_3502.JPG" alt="Mini golf photo 1" />
+      </a>
+      <a href="../images/IMG_3505.JPG" target="_blank">
+        <img src="../images/IMG_3505.JPG" alt="Mini golf photo 2" />
+      </a>
+      <a href="../images/IMG_3537.JPG" target="_blank">
+        <img src="../images/IMG_3537.JPG" alt="Mini golf photo 3" />
+      </a>
+      <a href="../images/IMG_3538.JPG" target="_blank">
+        <img src="../images/IMG_3538.JPG" alt="Mini golf photo 4" />
+      </a>
+    </div>
   </section>
 
   <!-- Ball Sensors -->
