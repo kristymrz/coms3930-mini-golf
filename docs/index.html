@@ -198,7 +198,7 @@
 <header>
   <h1>⛳ COMS3930 Mini Golf</h1>
   <p>Creative Embedded Systems — Final Project Documentation</p>
-  <div class="badge">Kristy Martinez &nbsp;·&nbsp; Victoria Cao &nbsp;·&nbsp; Mimansa Kant</div>
+  <div class="badge">Kristy Martinez &nbsp;·&nbsp; Mimansa Kant &nbsp;·&nbsp; Victoria Cao</div>
 </header>
 
 <nav>
@@ -221,8 +221,8 @@
       <div class="overview-text">
         <p>
           This project is an interactive embedded mini golf system built around multiple ESP32
-          microcontrollers communicating wirelessly via <strong>ESP-NOW</strong>. When a player sinks
-          the ball, sensors detect it and trigger a celebration sequence — a congratulations animation
+          microcontrollers communicating wirelessly via ESP-NOW. When a player sinks
+          the ball, sensors detect it and trigger a celebration sequence; a congratulations animation
           on a TFT display and an audio fanfare played from a connected computer.
         </p>
         <p>
@@ -283,7 +283,7 @@
     <p>
       The Ball Sensor ESP32 is registered as an ESP-NOW peer with the Congrats ESP32's MAC address
       hard-coded. When a sensor fires, it sends a single-byte message (<code>0x01</code>) to that
-      peer. No WiFi router is needed — the two boards communicate directly.
+      peer. No WiFi router is needed and the two boards communicate directly.
     </p>
   </section>
 
